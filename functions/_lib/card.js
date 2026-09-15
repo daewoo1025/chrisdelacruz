@@ -253,9 +253,18 @@ function emailType(label = "") {
  */
 export function buildVCard(settings) {
   const id = settings.identity || {};
-  const parts = String(id.name || "").trim().split(/\s+/);
-  const family = parts.length > 1 ? parts[parts.length - 1] : "";
-  const given = parts.length > 1 ? parts.slice(0, -1).join(" ") : parts[0] || "";
+  const parts = String(id.name || "").trim().split(/\s+/).filter(Boolean);
+  let family = "";
+  let given = "";
+  if (parts.length >= 3 && /^(dela|de|del|van|von)$/i.test(parts[parts.length - 2])) {
+    family = parts.slice(-2).join(" ");
+    given = parts.slice(0, -2).join(" ");
+  } else if (parts.length > 1) {
+    family = parts[parts.length - 1];
+    given = parts.slice(0, -1).join(" ");
+  } else {
+    given = parts[0] || "";
+  }
 
   const lines = [
     "BEGIN:VCARD",
