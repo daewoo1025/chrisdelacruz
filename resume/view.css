@@ -1,0 +1,256 @@
+:root {
+  --navy: #0c2f4a;
+  --sky: #00aef0;
+  --ink: #14324a;
+  --muted: #4d6478;
+  --line: rgba(12, 47, 74, 0.12);
+  --paper: #f4fafd;
+  --font-display: "Bricolage Grotesque", Georgia, serif;
+  --font-body: "Figtree", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 70% 45% at 8% 0%, rgba(0, 174, 240, 0.18), transparent 55%),
+    var(--paper);
+  line-height: 1.45;
+}
+
+.view-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+.view-bar a {
+  color: var(--navy);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.view-bar a:hover {
+  color: var(--sky);
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--navy);
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.view-shell {
+  width: min(860px, 100%);
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+
+.view-status {
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 2rem 1rem;
+}
+
+.resume-sheet {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  box-shadow: 0 18px 40px rgba(12, 47, 74, 0.1);
+  padding: clamp(1.2rem, 3vw, 2rem);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.resume-top {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.1rem;
+  align-items: center;
+}
+
+.resume-top.no-photo {
+  grid-template-columns: 1fr;
+}
+
+.resume-photo {
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 1rem;
+  object-fit: cover;
+  object-position: center top;
+  background: linear-gradient(90deg, #fff 0 48%, var(--sky) 48% 100%);
+}
+
+.resume-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--navy);
+  line-height: 1.1;
+}
+
+.resume-role {
+  margin-top: 0.35rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.resume-contact {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.resume-contact a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.resume-contact a:hover {
+  color: var(--sky);
+}
+
+.resume-section h2 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sky);
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid rgba(0, 174, 240, 0.25);
+}
+
+.resume-section p,
+.resume-section li {
+  font-size: 0.95rem;
+}
+
+.resume-section ul {
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.resume-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.resume-chips span {
+  background: #eef8fc;
+  color: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.job {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(12, 47, 74, 0.08);
+}
+
+.job:last-child {
+  border-bottom: 0;
+}
+
+.job-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.job-title {
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.job-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.job ul {
+  margin-top: 0.25rem;
+  padding-left: 1rem;
+  list-style: disc;
+}
+
+.job li {
+  margin: 0.15rem 0;
+}
+
+@media (max-width: 640px) {
+  .resume-top {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .resume-photo {
+    width: 5.75rem;
+    height: 5.75rem;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .view-shell {
+    width: 100%;
+    padding: 0;
+  }
+
+  .resume-sheet {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+}

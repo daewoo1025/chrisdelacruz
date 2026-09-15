@@ -1,3 +1,5 @@
+import { SOCIAL_ICONS, MESSAGE_ICONS } from "/shared/icons.js";
+
 (() => {
   const statusEl = document.getElementById("status");
   const saveBtn = document.getElementById("save-contact");
@@ -10,8 +12,21 @@
   const errorEl = document.getElementById("unlock-error");
   const submitBtn = document.getElementById("unlock-submit");
 
-  let photoClicks = 0;
-  let photoClickTimer = null;
+  let unlockClicks = 0;
+  let unlockClickTimer = null;
+  let cardData = null;
+  const LAYOUT_MQ = window.matchMedia("(max-width: 860px)");
+
+  function resolveLayout(data) {
+    const known = ["card", "split", "banner", "logo", "studio", "compact"];
+    const desktop = known.includes(data.layoutDesktop)
+      ? data.layoutDesktop
+      : known.includes(data.layout)
+        ? data.layout
+        : "card";
+    const mobile = known.includes(data.layoutMobile) ? data.layoutMobile : desktop;
+    return LAYOUT_MQ.matches ? mobile : desktop;
+  }
 
   function setStatus(message, kind = "") {
     if (!statusEl) return;
@@ -23,10 +38,6 @@
   function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent)
       || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  }
-
-  function isAndroid() {
-    return /Android/i.test(navigator.userAgent);
   }
 
   function displayValue(contact) {
@@ -71,35 +82,133 @@
     return null;
   }
 
+  function iconMarkup(def) {
+    if (!def) return "";
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${def.color}" d="${def.path}"/></svg>`;
+  }
+
   function renderMessaging(messaging = {}) {
     const row = document.getElementById("messaging-row");
-    if (!row) return;
+    if (!row) return 0;
     row.innerHTML = "";
-    const items = [
-      { key: "whatsapp", label: "WhatsApp" },
-      { key: "viber", label: "Viber" },
-      { key: "telegram", label: "Telegram" },
-    ];
     let shown = 0;
-    for (const item of items) {
-      const cfg = messaging[item.key];
+    for (const [key, meta] of Object.entries(MESSAGE_ICONS)) {
+      const cfg = messaging[key];
       if (!cfg?.enabled || !cfg.value) continue;
-      const href = messagingHref(item.key, cfg.value);
+      const href = messagingHref(key, cfg.value);
       if (!href) continue;
       const a = document.createElement("a");
-      a.className = "btn btn-msg";
+      a.className = "connect-link connect-link-msg";
       a.href = href;
       a.target = "_blank";
       a.rel = "noopener noreferrer";
-      a.textContent = item.label;
+      a.title = meta.label;
+      a.setAttribute("aria-label", meta.label);
+      a.innerHTML = iconMarkup(meta);
       row.appendChild(a);
       shown += 1;
     }
     row.hidden = shown === 0;
+    return shown;
+  }
+
+  function renderSocials(socials = {}) {
+    const row = document.getElementById("social-row");
+    if (!row) return 0;
+    row.innerHTML = "";
+    let shown = 0;
+    for (const [key, meta] of Object.entries(SOCIAL_ICONS)) {
+      const cfg = socials[key];
+      if (!cfg?.enabled || !cfg.url) continue;
+      const a = document.createElement("a");
+      a.className = "connect-link connect-link-social";
+      a.href = cfg.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.title = meta.label;
+      a.setAttribute("aria-label", meta.label);
+      a.innerHTML = iconMarkup(meta);
+      row.appendChild(a);
+      shown += 1;
+    }
+    row.hidden = shown === 0;
+    return shown;
+  }
+
+  function layoutConnectRow(socialCount, messagingCount) {
+    const connect = document.getElementById("connect-row");
+    if (!connect) return;
+    const total = socialCount + messagingCount;
+    connect.hidden = total === 0;
+    connect.classList.toggle("is-pair", socialCount === 1 && messagingCount === 1);
+    connect.classList.toggle("is-sparse", total > 0 && total <= 2);
+  }
+
+  function factIcon(type, contact = null) {
+    const label = `${contact?.label || ""} ${contact?.value || ""}`.toLowerCase();
+    if (type === "phone") {
+      return `<svg class="fact-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.2 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8z"/></svg>`;
+    }
+    if (type === "email") {
+      return `<svg class="fact-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>`;
+    }
+    if (label.includes("linkedin")) {
+      return `<svg class="fact-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.23 0z"/></svg>`;
+    }
+    return `<svg class="fact-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.7 1.4-3.1 3.1-3.1h4V7H7c-2.8 0-5 2.2-5 5s2.2 5 5 5h4v-1.9H7c-1.7 0-3.1-1.4-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.7 0 3.1 1.4 3.1 3.1s-1.4 3.1-3.1 3.1h-4V17h4c2.8 0 5-2.2 5-5s-2.2-5-5-5z"/></svg>`;
+  }
+
+  function applyCardChrome(chrome = {}) {
+    const root = document.documentElement;
+    const factsMode = chrome.factsMode || "full";
+    const shareMode = chrome.shareMode || "full";
+    const resumeMode = chrome.resumeMode || "full";
+    root.dataset.factsMode = factsMode;
+    root.dataset.shareMode = shareMode;
+    root.dataset.resumeMode = resumeMode;
+
+    const shareBtn = document.getElementById("share-card");
+    if (shareBtn) {
+      shareBtn.hidden = shareMode === "hidden";
+      shareBtn.classList.toggle("is-icon-only", shareMode === "icon");
+      shareBtn.setAttribute("aria-label", "Share my card");
+      const label = shareBtn.querySelector(".btn-label");
+      if (label) label.textContent = "Share my card";
+    }
+
+    const resumeBtn = document.getElementById("download-resume");
+    if (resumeBtn) {
+      resumeBtn.classList.toggle("is-icon-only", resumeMode === "icon");
+      if (resumeMode === "hidden") {
+        resumeBtn.dataset.chromeHidden = "1";
+      } else {
+        delete resumeBtn.dataset.chromeHidden;
+      }
+    }
   }
 
   function applyCard(data) {
+    cardData = data;
+    const layout = resolveLayout(data);
     document.documentElement.dataset.theme = data.theme || "sky";
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      themeColor.setAttribute(
+        "content",
+        data.theme === "night" ? "#081018" : "#0096D6"
+      );
+    }
+    document.documentElement.dataset.layout = layout;
+    document.documentElement.dataset.layoutDesktop = data.layoutDesktop || data.layout || "card";
+    document.documentElement.dataset.layoutMobile = data.layoutMobile || data.layout || "card";
+    applyCardChrome(data.cardChrome);
+    const hero = document.querySelector(".split-hero");
+    if (hero) {
+      hero.setAttribute(
+        "aria-hidden",
+        layout === "split" || layout === "banner" ? "false" : "true"
+      );
+    }
 
     const id = data.identity || {};
     const setText = (elId, value) => {
@@ -108,18 +217,30 @@
     };
 
     setText("brand", id.brand || "chrisdelacruz.com");
+    setText("brand-hero", id.brand || "chrisdelacruz.com");
     setText("tagline", id.tagline || "Digital calling card");
     setText("eyebrow", id.eyebrow || "Hello, I’m");
     setText("display-name", id.name || "");
     setText("role", id.role || "");
     setText("place", id.place || id.workLocation || "");
     setText("footer-name", id.name || "Christian Dela Cruz");
+    setText("footer-name-split", id.name || "Christian Dela Cruz");
+
+    const headline = [id.role, id.org].filter(Boolean).join(" at ") || "Digital calling card";
+    setText("split-headline", headline);
+    setText("split-bio", id.note || "");
+
+    const dateEl = document.getElementById("card-date");
+    if (dateEl) {
+      dateEl.hidden = !(layout === "split" || layout === "banner");
+      dateEl.textContent = new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    }
 
     document.title = `${id.name || "Calling Card"} · Calling Card`;
     if (photo) photo.alt = id.name || "Profile photo";
-
-    const linkedin = document.getElementById("linkedin-cta");
-    if (linkedin && id.linkedin) linkedin.href = id.linkedin;
 
     const companyLine = document.getElementById("company-line");
     const companyName = document.getElementById("company-name");
@@ -143,16 +264,93 @@
     }
 
     const frame = document.getElementById("portrait-frame");
+    const photoMobile = document.getElementById("profile-photo-mobile");
+    const heroPhoto = document.getElementById("hero-photo");
+    const heroPhotoMobile = document.getElementById("hero-photo-mobile");
+    const heroBg = document.getElementById("split-hero-bg");
+    const logoWrap = document.getElementById("company-logo-wrap");
+    const logoImg = document.getElementById("company-logo");
     const p = data.photo || {};
-    if (photo && p.src) {
-      photo.src = p.src;
-      photo.style.objectFit = p.objectFit || "cover";
-      photo.style.objectPosition = p.objectPosition || "center top";
+    const desktopCrop = p.desktop || {
+      objectFit: p.objectFit || "cover",
+      objectPosition: p.objectPosition || "50% 20%",
+      zoom: 1,
+      size: p.desktopSize || "168px",
+    };
+    const mobileCrop = p.mobile || {
+      objectFit: p.objectFit || "cover",
+      objectPosition: p.objectPosition || "50% 18%",
+      zoom: 1,
+      size: p.mobileSize || "92px",
+    };
+    const assets = data.assets || {};
+    const root = document.documentElement;
+    root.style.setProperty("--photo-desktop", desktopCrop.size || "168px");
+    root.style.setProperty("--photo-mobile", mobileCrop.size || "92px");
+    root.style.setProperty("--photo-radius", p.borderRadius || "1rem");
+    root.style.setProperty("--photo-fit", desktopCrop.objectFit || "cover");
+    root.style.setProperty("--photo-pos", desktopCrop.objectPosition || "center top");
+    root.style.setProperty("--photo-fit-mobile", mobileCrop.objectFit || "cover");
+    root.style.setProperty("--photo-pos-mobile", mobileCrop.objectPosition || "center top");
+    root.style.setProperty("--photo-zoom", String(desktopCrop.zoom || 1));
+    root.style.setProperty("--photo-zoom-mobile", String(mobileCrop.zoom || 1));
+    root.classList.toggle("photo-clear", Boolean(p.clearBackground));
+
+    if (heroBg) {
+      if (assets.heroBg) {
+        heroBg.style.setProperty("--hero-image", `url("${assets.heroBg}")`);
+        heroBg.classList.add("has-image");
+      } else {
+        heroBg.style.removeProperty("--hero-image");
+        heroBg.classList.remove("has-image");
+      }
     }
+
+    if (logoWrap && logoImg) {
+      if (assets.logo) {
+        logoImg.src = assets.logo;
+        logoImg.alt = id.org ? `${id.org} logo` : "Company logo";
+        logoWrap.hidden = false;
+      } else {
+        logoImg.removeAttribute("src");
+        logoImg.alt = "";
+        logoWrap.hidden = true;
+      }
+    }
+
+    const desktopSrc = p.src || "/images/christian-dela-cruz.png";
+    const mobileSrc = p.mobileSrc || desktopSrc;
+    const applyPortrait = (img, crop, src, isMobile = false) => {
+      if (!img) return;
+      img.src = src;
+      img.style.objectFit = p.clearBackground ? "contain" : (crop.objectFit || "cover");
+      img.style.objectPosition = p.clearBackground && !isMobile
+        ? (crop.objectPosition || "center top")
+        : p.clearBackground
+          ? "bottom center"
+          : (crop.objectPosition || "center top");
+      img.style.transform = `scale(${crop.zoom || 1})`;
+      img.style.transformOrigin = crop.objectPosition || "center center";
+    };
+
+    applyPortrait(photo, desktopCrop, desktopSrc, false);
+    applyPortrait(photoMobile, mobileCrop, mobileSrc, true);
+    applyPortrait(heroPhoto, desktopCrop, desktopSrc, false);
+    applyPortrait(heroPhotoMobile, {
+      ...mobileCrop,
+      objectPosition: p.clearBackground ? "bottom center" : mobileCrop.objectPosition,
+    }, mobileSrc, true);
+
+    if (photo) photo.alt = id.name || "Profile photo";
+    if (photoMobile) photoMobile.alt = id.name || "Profile photo";
+
     if (frame) {
-      if (p.minHeight) frame.style.minHeight = p.minHeight;
-      if (p.maxHeight) frame.style.maxHeight = p.maxHeight;
-      if (p.borderRadius) frame.style.borderRadius = p.borderRadius;
+      frame.classList.toggle("is-clear", Boolean(p.clearBackground));
+      if (layout === "split" || layout === "studio") {
+        frame.style.borderRadius = "999px";
+      } else if (p.borderRadius) {
+        frame.style.borderRadius = p.borderRadius;
+      }
     }
 
     const facts = document.getElementById("facts");
@@ -162,24 +360,60 @@
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = hrefFor(c);
+        const shown = displayValue(c);
+        a.setAttribute("aria-label", `${c.label || c.type}: ${shown}`);
+        a.title = `${c.label || c.type}: ${shown}`;
         if (c.type === "link") {
           a.target = "_blank";
           a.rel = "noopener noreferrer";
         }
+        a.insertAdjacentHTML("beforeend", factIcon(c.type, c));
         const label = document.createElement("span");
         label.className = "fact-label";
         label.textContent = c.label || c.type;
         const value = document.createElement("span");
         value.className = "fact-value";
-        value.textContent = displayValue(c);
+        value.textContent = shown;
         a.appendChild(label);
         a.appendChild(value);
         li.appendChild(a);
         facts.appendChild(li);
       }
+      facts.hidden = (data.cardChrome?.factsMode || "full") === "hidden" || !data.contacts.length;
     }
 
-    renderMessaging(data.messaging);
+    const messagingCount = renderMessaging(data.messaging);
+    const socialCount = renderSocials(data.socials);
+    layoutConnectRow(socialCount, messagingCount);
+
+    const resumeBtn = document.getElementById("download-resume");
+    if (resumeBtn) {
+      const resume = data.resumeDownload || {};
+      const resumeMode = data.cardChrome?.resumeMode || "full";
+      const labelEl = resumeBtn.querySelector(".btn-label");
+      if (resume.available && resume.url && resumeMode !== "hidden") {
+        resumeBtn.hidden = false;
+        resumeBtn.href = resume.url;
+        const safeName = String(resume.name || "Resume")
+          .replace(/[^\w.\- ]+/g, "")
+          .replace(/\s+/g, "_");
+        if (resume.kind === "page") {
+          resumeBtn.removeAttribute("download");
+          resumeBtn.setAttribute("target", "_blank");
+          resumeBtn.setAttribute("rel", "noopener noreferrer");
+          if (labelEl) labelEl.textContent = "View Resume";
+          resumeBtn.setAttribute("aria-label", "View Resume");
+        } else {
+          resumeBtn.setAttribute("download", `${safeName || "Resume"}.pdf`);
+          resumeBtn.removeAttribute("target");
+          resumeBtn.removeAttribute("rel");
+          if (labelEl) labelEl.textContent = "Download Resume";
+          resumeBtn.setAttribute("aria-label", "Download Resume");
+        }
+      } else {
+        resumeBtn.hidden = true;
+      }
+    }
 
     if (saveBtn && id.name) {
       saveBtn.setAttribute(
@@ -307,30 +541,24 @@
     }
   }
 
-  if (isIOS() && googleBtn) {
-    googleBtn.classList.add("btn-ghost");
-    googleBtn.style.border = "1px solid var(--line)";
-  }
-  if (isAndroid() && appleBtn) {
-    appleBtn.classList.add("btn-ghost");
-    appleBtn.style.border = "1px solid var(--line)";
-  }
-
   if (saveBtn) saveBtn.addEventListener("click", saveContact);
   if (appleBtn) appleBtn.addEventListener("click", () => addToWallet("apple"));
   if (googleBtn) googleBtn.addEventListener("click", () => addToWallet("google"));
 
-  if (photo) {
-    photo.addEventListener("click", () => {
-      photoClicks += 1;
-      clearTimeout(photoClickTimer);
-      if (photoClicks >= 3) {
-        photoClicks = 0;
+  const qr = document.getElementById("qr");
+  const qrBlock = document.querySelector(".qr-block");
+  const unlockTarget = qrBlock || qr;
+  if (unlockTarget) {
+    unlockTarget.addEventListener("click", () => {
+      unlockClicks += 1;
+      clearTimeout(unlockClickTimer);
+      if (unlockClicks >= 3) {
+        unlockClicks = 0;
         openModal();
         return;
       }
-      photoClickTimer = setTimeout(() => {
-        photoClicks = 0;
+      unlockClickTimer = setTimeout(() => {
+        unlockClicks = 0;
       }, 800);
     });
   }
@@ -382,5 +610,33 @@
     }
   });
 
+  const shareBtn = document.getElementById("share-card");
+  if (shareBtn) {
+    shareBtn.addEventListener("click", async () => {
+      const url = window.location.origin + "/";
+      const title = document.getElementById("display-name")?.textContent || "Calling card";
+      try {
+        if (navigator.share) {
+          await navigator.share({ title, url, text: `Save my contact: ${url}` });
+          setStatus("Shared.", "is-ok");
+          return;
+        }
+      } catch (err) {
+        if (err?.name === "AbortError") return;
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        setStatus("Link copied.", "is-ok");
+      } catch {
+        setStatus("Could not share automatically.", "is-error");
+      }
+    });
+  }
+
   loadCard();
+  const onLayoutMq = () => {
+    if (cardData) applyCard(cardData);
+  };
+  if (LAYOUT_MQ.addEventListener) LAYOUT_MQ.addEventListener("change", onLayoutMq);
+  else if (LAYOUT_MQ.addListener) LAYOUT_MQ.addListener(onLayoutMq);
 })();

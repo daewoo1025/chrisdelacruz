@@ -15,6 +15,7 @@ const DEFAULT_RESUME = {
     phone: "+639711358319",
     email: "c000business@gmail.com",
     linkedin: "https://www.linkedin.com/in/chris-dc/",
+    website: "https://chrisdelacruz.com",
   },
   summary:
     "Junior Data Analyst based in Dubai, UAE, available for freelance work in the Philippines. Digital calling card at chrisdelacruz.com.",

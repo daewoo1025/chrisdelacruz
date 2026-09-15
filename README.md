@@ -2,27 +2,33 @@
 
 Digital calling card for **Christian Dela Cruz**.
 
-Visitors can:
+**Continuing the build?** Read **[BUILD_NOTES.md](./BUILD_NOTES.md)** — blow-by-blow of features, file map, deploy, and next steps. Pull `master` and keep going from there.
 
-- **Save to Contacts** (dynamic `.vcf`) on iPhone and Android
-- **Scan a QR code** that adds your contact
-- **Add to Apple Wallet / Google Wallet** (optional API key — see below)
+## Visitors get
 
-## Admin (triple-click photo)
+- Save to Contacts (dynamic `.vcf`)
+- QR code · Share · optional Apple / Google Wallet
+- Messaging + social icon chips
+- Resume download or live resume page
+- Responsive layouts (desktop + phone can differ)
 
-Click the portrait **3 times quickly** → enter password → `/admin/`.
+## Admin (triple-click QR)
 
-From admin you can:
+Click the QR **3 times quickly** → password → `/admin/`.
 
-- Change **theme** (sky, ocean, slate, ember, forest)
-- Replace / reset **photo**, adjust fit, position, min/max height, radius
-- Edit **identity** (name, role, place, LinkedIn, etc.)
-- **Add / edit / delete** phones & emails with custom tags (Smart, Globe, Etisalat, Personal Email, Company Email, …)
-- Open the **resume builder** (`/resume/`)
+Appearance subtabs: **Layouts · Theme · Display · Photos · Assets**
+
+- Mix & match laptop vs phone layouts with live preview (no Save needed to preview)
+- Theme + night mode
+- Display: icon-only or hide contacts / Share / Resume
+- Dual-device photo framing (drag to pan; lossless CSS crop)
+- Hero background + company logo (hidden when empty)
+
+Also: Details, Contacts, Messaging, Socials, Resume, Security.
 
 ### Password
 
-Local (`.dev.vars`):
+Local (`.dev.vars` — not committed):
 
 ```
 UNLOCK_PASSWORD=change-me
@@ -34,15 +40,9 @@ Production:
 npx wrangler pages secret put UNLOCK_PASSWORD --project-name=chrisdelacruz
 ```
 
-### Persist settings (recommended)
+### Persist settings
 
-Without KV, admin saves work in-memory for the running worker only. For durable settings:
-
-```bash
-npx wrangler kv namespace create CARD
-```
-
-Uncomment the `[[kv_namespaces]]` block in `wrangler.toml` and paste the id. Bind the same namespace in the Cloudflare Pages project settings.
+KV binding `CARD` in `wrangler.toml`. Same namespace must be bound on the Cloudflare Pages project.
 
 ## Local preview
 
@@ -50,9 +50,7 @@ Uncomment the `[[kv_namespaces]]` block in `wrangler.toml` and paste the id. Bin
 npx wrangler pages dev .
 ```
 
-## Wallet passes (Apple + Google)
-
-Uses free [WalletWallet](https://www.walletwallet.dev/) (optional):
+## Wallet (optional)
 
 ```bash
 npx wrangler pages secret put WALLETWALLET_API_KEY --project-name=chrisdelacruz
@@ -65,3 +63,7 @@ npx wrangler pages deploy . --project-name=chrisdelacruz
 ```
 
 Then attach **chrisdelacruz.com** in Pages domain settings.
+
+## Repo
+
+https://github.com/daewoo1025/chrisdelacruz

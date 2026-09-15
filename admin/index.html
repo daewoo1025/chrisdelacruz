@@ -13,130 +13,479 @@
 <body>
   <div class="admin-shell">
     <header class="admin-top">
-      <div>
+      <div class="admin-brand">
         <a class="back" href="/">← Calling card</a>
         <h1>Admin</h1>
+        <p class="admin-sub">Edit the public card, then save.</p>
       </div>
       <div class="admin-top-actions">
-        <a class="btn btn-secondary" href="/resume/">Open resume builder</a>
+        <a class="btn btn-secondary" href="/resume/">Resume builder</a>
         <button type="button" class="btn btn-ghost" id="lock-btn">Lock</button>
       </div>
     </header>
 
-    <p class="banner" id="banner" hidden></p>
-
-    <nav class="tabs" role="tablist">
+    <nav class="tabs" role="tablist" aria-label="Admin sections">
       <button type="button" class="tab is-active" data-tab="appearance" role="tab" aria-selected="true">Appearance</button>
       <button type="button" class="tab" data-tab="details" role="tab" aria-selected="false">Details</button>
       <button type="button" class="tab" data-tab="contacts" role="tab" aria-selected="false">Contacts</button>
       <button type="button" class="tab" data-tab="messaging" role="tab" aria-selected="false">Messaging</button>
+      <button type="button" class="tab" data-tab="socials" role="tab" aria-selected="false">Socials</button>
       <button type="button" class="tab" data-tab="resume" role="tab" aria-selected="false">Resume</button>
+      <button type="button" class="tab" data-tab="security" role="tab" aria-selected="false">Security</button>
     </nav>
 
     <section class="panel is-active" id="panel-appearance" role="tabpanel">
-      <h2>Theme</h2>
-      <div class="theme-grid" id="theme-grid"></div>
+      <nav class="subtabs" role="tablist" aria-label="Appearance sections">
+        <button type="button" class="subtab is-active" data-subtab="layouts" role="tab" aria-selected="true">Layouts</button>
+        <button type="button" class="subtab" data-subtab="theme" role="tab" aria-selected="false">Theme</button>
+        <button type="button" class="subtab" data-subtab="display" role="tab" aria-selected="false">Display</button>
+        <button type="button" class="subtab" data-subtab="photos" role="tab" aria-selected="false">Photos</button>
+        <button type="button" class="subtab" data-subtab="assets" role="tab" aria-selected="false">Assets</button>
+      </nav>
 
-      <h2>Photo</h2>
-      <div class="photo-editor">
-        <div class="photo-preview-wrap">
-          <img id="photo-preview" src="/images/christian-dela-cruz.png" alt="Current photo">
+      <div class="live-preview-dock" id="live-preview-dock" aria-label="Live device previews">
+        <div class="live-preview-head">
+          <h2>Live preview</h2>
+          <p class="help tight">Updates instantly — no Save needed to see layouts, theme, or photo framing.</p>
         </div>
-        <div class="photo-controls">
-          <label class="file-btn">
-            Replace photo
-            <input type="file" id="photo-file" accept="image/*" hidden>
-          </label>
-          <button type="button" class="btn btn-ghost" id="photo-reset">Use default photo</button>
+        <div class="live-preview-pair">
+          <article class="preview-device preview-laptop">
+            <header>
+              <strong>Laptop / tablet</strong>
+              <span id="live-desktop-layout-label">Classic card</span>
+            </header>
+            <div class="preview-bezel preview-bezel-laptop">
+              <div class="live-stage" id="live-stage-desktop" data-device="desktop"></div>
+            </div>
+          </article>
+          <article class="preview-device preview-phone">
+            <header>
+              <strong>Phone</strong>
+              <span id="live-mobile-layout-label">Compact</span>
+            </header>
+            <div class="preview-bezel preview-bezel-phone">
+              <div class="live-stage" id="live-stage-mobile" data-device="mobile"></div>
+            </div>
+          </article>
+        </div>
+      </div>
 
-          <label class="field">
-            <span>Object fit</span>
-            <select id="photo-fit">
-              <option value="cover">Cover</option>
-              <option value="contain">Contain</option>
-              <option value="fill">Fill</option>
-            </select>
-          </label>
+      <div class="subpanel is-active" id="sub-layouts" role="tabpanel" data-subpanel="layouts">
+        <div class="block">
+          <div class="block-head">
+            <h2>Mix &amp; match layouts</h2>
+            <p class="help">Pick one layout for laptop/tablet and another for phone. Watch the live previews above update as you click.</p>
+          </div>
+          <div class="layout-pair">
+            <div class="layout-device-col">
+              <h3 class="layout-device-title">Laptop / tablet</h3>
+              <div class="layout-grid" id="layout-grid-desktop"></div>
+            </div>
+            <div class="layout-device-col">
+              <h3 class="layout-device-title">Phone</h3>
+              <div class="layout-grid" id="layout-grid-mobile"></div>
+            </div>
+          </div>
+          <p class="help tight" id="layout-pair-help">Assets needed will show under the Assets tab.</p>
+        </div>
+      </div>
 
-          <label class="field">
-            <span>Position</span>
-            <select id="photo-position">
-              <option value="center top">Center top</option>
-              <option value="center center">Center</option>
-              <option value="center bottom">Center bottom</option>
-              <option value="left top">Left top</option>
-              <option value="right top">Right top</option>
-            </select>
-          </label>
+      <div class="subpanel" id="sub-theme" role="tabpanel" data-subpanel="theme" hidden>
+        <div class="block">
+          <div class="block-head">
+            <h2>Theme</h2>
+            <p class="help">Colors for the whole public calling card, including icons and buttons.</p>
+          </div>
+          <div class="theme-grid" id="theme-grid"></div>
+        </div>
+      </div>
 
-          <label class="field">
-            <span>Min height</span>
-            <input type="text" id="photo-min-height" placeholder="68vh">
-          </label>
+      <div class="subpanel" id="sub-display" role="tabpanel" data-subpanel="display" hidden>
+        <div class="block">
+          <div class="block-head">
+            <h2>Display &amp; space</h2>
+            <p class="help">Shrink phone, email, and LinkedIn to icons — or hide them. Make Share and Resume icon-only to free space. Live preview updates as you click.</p>
+          </div>
 
-          <label class="field">
-            <span>Max height</span>
-            <input type="text" id="photo-max-height" placeholder="640px">
-          </label>
+          <div class="chrome-grid">
+            <fieldset class="chrome-field">
+              <legend>Contact details</legend>
+              <p class="help tight">Phone, email, LinkedIn (and any other contacts you show).</p>
+              <div class="chrome-options" data-chrome="factsMode">
+                <label><input type="radio" name="chrome-facts" value="full" checked> Full text</label>
+                <label><input type="radio" name="chrome-facts" value="icons"> Icons only</label>
+                <label><input type="radio" name="chrome-facts" value="hidden"> Hidden</label>
+              </div>
+            </fieldset>
 
-          <label class="field">
-            <span>Corner radius</span>
-            <input type="text" id="photo-radius" placeholder="1.6rem">
-          </label>
+            <fieldset class="chrome-field">
+              <legend>Share button</legend>
+              <p class="help tight">“Share my card” on the public page.</p>
+              <div class="chrome-options" data-chrome="shareMode">
+                <label><input type="radio" name="chrome-share" value="full" checked> Label</label>
+                <label><input type="radio" name="chrome-share" value="icon"> Icon only</label>
+                <label><input type="radio" name="chrome-share" value="hidden"> Hidden</label>
+              </div>
+            </fieldset>
+
+            <fieldset class="chrome-field">
+              <legend>Resume button</legend>
+              <p class="help tight">Download / view resume — stays hidden until a resume is active.</p>
+              <div class="chrome-options" data-chrome="resumeMode">
+                <label><input type="radio" name="chrome-resume" value="full" checked> Label</label>
+                <label><input type="radio" name="chrome-resume" value="icon"> Icon only</label>
+                <label><input type="radio" name="chrome-resume" value="hidden"> Hidden</label>
+              </div>
+            </fieldset>
+          </div>
+          <p class="help tight">Tip: turn off individual contacts under Contacts → Show if you only want some of them gone.</p>
+        </div>
+      </div>
+
+      <div class="subpanel" id="sub-photos" role="tabpanel" data-subpanel="photos" hidden>
+        <div class="block">
+          <div class="block-head">
+            <h2>Photos &amp; framing</h2>
+            <p class="help">Upload laptop and phone photos separately if you want. Drag the photo in the live preview (or the small crop frames) to pan. Framing does not re-save the image — full quality is kept.</p>
+          </div>
+
+          <div class="photo-editor">
+            <div class="photo-controls">
+              <label class="check-field">
+                <input type="checkbox" id="photo-clear-bg">
+                <span>Clear / transparent background (PNG) — shows layout background behind you</span>
+              </label>
+
+              <label class="field">
+                <span>Corner radius (both)</span>
+                <input type="text" id="photo-radius" placeholder="1rem">
+              </label>
+
+              <div class="device-crop-card" data-device="desktop">
+                <h3>Laptop / iPad</h3>
+                <div class="btn-row-actions">
+                  <label class="file-btn">
+                    Upload laptop photo
+                    <input type="file" id="photo-file-desktop" accept="image/*" hidden>
+                  </label>
+                  <button type="button" class="btn btn-ghost" id="photo-reset-desktop">Use default</button>
+                </div>
+                <label class="field">
+                  <span>Frame size</span>
+                  <input type="text" id="photo-desktop-size" placeholder="168px">
+                </label>
+                <label class="field">
+                  <span>Fit</span>
+                  <select id="photo-desktop-fit">
+                    <option value="cover">Cover</option>
+                    <option value="contain">Contain</option>
+                    <option value="fill">Fill</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Pan X <em id="photo-desktop-x-label">50%</em></span>
+                  <input type="range" id="photo-desktop-x" min="0" max="100" value="50">
+                </label>
+                <label class="field">
+                  <span>Pan Y <em id="photo-desktop-y-label">20%</em></span>
+                  <input type="range" id="photo-desktop-y" min="0" max="100" value="20">
+                </label>
+                <label class="field">
+                  <span>Zoom <em id="photo-desktop-zoom-label">100%</em></span>
+                  <input type="range" id="photo-desktop-zoom" min="100" max="220" value="100">
+                </label>
+              </div>
+
+              <div class="device-crop-card" data-device="mobile">
+                <h3>Phone</h3>
+                <div class="btn-row-actions">
+                  <label class="file-btn file-btn-secondary">
+                    Upload phone photo
+                    <input type="file" id="photo-file-mobile" accept="image/*" hidden>
+                  </label>
+                  <button type="button" class="btn btn-ghost" id="photo-reset-mobile">Same as laptop</button>
+                </div>
+                <label class="field">
+                  <span>Frame size</span>
+                  <input type="text" id="photo-mobile-size" placeholder="92px">
+                </label>
+                <label class="field">
+                  <span>Fit</span>
+                  <select id="photo-mobile-fit">
+                    <option value="cover">Cover</option>
+                    <option value="contain">Contain</option>
+                    <option value="fill">Fill</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Pan X <em id="photo-mobile-x-label">50%</em></span>
+                  <input type="range" id="photo-mobile-x" min="0" max="100" value="50">
+                </label>
+                <label class="field">
+                  <span>Pan Y <em id="photo-mobile-y-label">18%</em></span>
+                  <input type="range" id="photo-mobile-y" min="0" max="100" value="18">
+                </label>
+                <label class="field">
+                  <span>Zoom <em id="photo-mobile-zoom-label">100%</em></span>
+                  <input type="range" id="photo-mobile-zoom" min="100" max="220" value="100">
+                </label>
+              </div>
+            </div>
+
+            <div class="photo-device-previews">
+              <article class="device-preview device-desktop">
+                <header>
+                  <strong>Laptop / tablet</strong>
+                  <span id="preview-desktop-label">168×168</span>
+                </header>
+                <div class="device-screen">
+                  <div class="mock-resume-head">
+                    <div class="mock-photo crop-stage" id="preview-desktop-frame">
+                      <img id="preview-desktop-img" src="/images/christian-dela-cruz.png" alt="" draggable="false">
+                    </div>
+                    <div class="mock-copy">
+                      <p class="mock-eyebrow">Hello, I’m</p>
+                      <p class="mock-name">Christian Dela Cruz</p>
+                      <p class="mock-role">Junior Data Analyst</p>
+                      <p class="mock-meta">Dubai, UAE</p>
+                      <p class="mock-meta">DC Group HQ</p>
+                    </div>
+                  </div>
+                </div>
+                <p class="help tight">Drag the photo to pan. Zoom frames the original — quality is preserved.</p>
+              </article>
+
+              <article class="device-preview device-phone">
+                <header>
+                  <strong>Phone</strong>
+                  <span id="preview-mobile-label">92×92</span>
+                </header>
+                <div class="device-screen phone-screen">
+                  <div class="mock-resume-head">
+                    <div class="mock-photo crop-stage" id="preview-mobile-frame">
+                      <img id="preview-mobile-img" src="/images/christian-dela-cruz.png" alt="" draggable="false">
+                    </div>
+                    <div class="mock-copy">
+                      <p class="mock-eyebrow">Hello, I’m</p>
+                      <p class="mock-name">Christian Dela Cruz</p>
+                      <p class="mock-role">Junior Data Analyst</p>
+                      <p class="mock-meta">Dubai, UAE</p>
+                      <p class="mock-meta">DC Group HQ</p>
+                    </div>
+                  </div>
+                </div>
+                <p class="help tight">Optional separate phone image — otherwise uses laptop photo with this framing.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subpanel" id="sub-assets" role="tabpanel" data-subpanel="assets" hidden>
+        <div class="block">
+          <div class="block-head">
+            <h2>Layout assets</h2>
+            <p class="help" id="layout-assets-help">Upload only what your layouts need. If you skip an asset, it stays hidden on the public card — no empty placeholders.</p>
+          </div>
+          <div class="asset-grid">
+            <article class="asset-card" data-asset="hero">
+              <div class="asset-card-top">
+                <h3>Hero / background</h3>
+                <span class="asset-badge" id="hero-need-badge">Optional</span>
+              </div>
+              <p>Used by Dynamic Split and Banner. Leave empty to hide hero scenery.</p>
+              <div class="asset-preview" id="hero-preview"><span>No image</span></div>
+              <div class="btn-row-actions asset-actions">
+                <label class="file-btn file-btn-secondary">
+                  Upload
+                  <input type="file" id="hero-file" accept="image/*" hidden>
+                </label>
+                <button type="button" class="btn btn-ghost" id="hero-reset">Remove</button>
+              </div>
+            </article>
+            <article class="asset-card" data-asset="logo">
+              <div class="asset-card-top">
+                <h3>Company logo</h3>
+                <span class="asset-badge" id="logo-need-badge">Optional</span>
+              </div>
+              <p>Transparent PNG preferred. Not uploaded = not shown on the card.</p>
+              <div class="asset-preview asset-preview-logo" id="logo-preview"><span>No logo</span></div>
+              <div class="btn-row-actions asset-actions">
+                <label class="file-btn file-btn-secondary">
+                  Upload
+                  <input type="file" id="logo-file" accept="image/*" hidden>
+                </label>
+                <button type="button" class="btn btn-ghost" id="logo-reset">Remove</button>
+              </div>
+            </article>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="panel" id="panel-details" role="tabpanel" hidden>
-      <h2>Identity</h2>
-      <div class="form-grid">
-        <label class="field"><span>Brand</span><input id="id-brand" type="text"></label>
-        <label class="field"><span>Tagline</span><input id="id-tagline" type="text"></label>
-        <label class="field"><span>Eyebrow</span><input id="id-eyebrow" type="text"></label>
-        <label class="field"><span>Name</span><input id="id-name" type="text"></label>
-        <label class="field"><span>Job title</span><input id="id-role" type="text" placeholder="Junior Data Analyst"></label>
-        <label class="field"><span>Card place line</span><input id="id-place" type="text" placeholder="Dubai, UAE"></label>
-        <label class="field"><span>Work location (vCard)</span><input id="id-work-location" type="text" placeholder="Dubai, UAE"></label>
-        <label class="field"><span>Home location (vCard)</span><input id="id-home-location" type="text" placeholder="Metro Manila, Philippines"></label>
-        <label class="field"><span>Company</span><input id="id-org" type="text" placeholder="Company name"></label>
-        <label class="field"><span>Company website</span><input id="id-company-website" type="url" placeholder="https://"></label>
-        <label class="field"><span>LinkedIn URL</span><input id="id-linkedin" type="url"></label>
-        <label class="field full"><span>Notes (who you are / what you do)</span><textarea id="id-note" rows="5"></textarea></label>
+      <div class="block">
+        <div class="block-head">
+          <h2>Identity</h2>
+          <p class="help">Name, role, locations, and company shown on the card and in your contact file.</p>
+        </div>
+        <div class="form-grid">
+          <label class="field"><span>Brand</span><input id="id-brand" type="text"></label>
+          <label class="field"><span>Tagline</span><input id="id-tagline" type="text"></label>
+          <label class="field"><span>Eyebrow</span><input id="id-eyebrow" type="text"></label>
+          <label class="field"><span>Name</span><input id="id-name" type="text"></label>
+          <label class="field"><span>Job title</span><input id="id-role" type="text" placeholder="Junior Data Analyst"></label>
+          <label class="field"><span>Card place line</span><input id="id-place" type="text" placeholder="Dubai, UAE"></label>
+          <label class="field"><span>Work location (vCard)</span><input id="id-work-location" type="text" placeholder="Dubai, UAE"></label>
+          <label class="field"><span>Home location (vCard)</span><input id="id-home-location" type="text" placeholder="Metro Manila, Philippines"></label>
+          <label class="field"><span>Company</span><input id="id-org" type="text" placeholder="Company name"></label>
+          <label class="field"><span>Company website</span><input id="id-company-website" type="url" placeholder="https://"></label>
+          <label class="field full"><span>LinkedIn URL</span><input id="id-linkedin" type="url"></label>
+          <label class="field full"><span>Notes (who you are / what you do)</span><textarea id="id-note" rows="5"></textarea></label>
+        </div>
       </div>
     </section>
 
     <section class="panel" id="panel-contacts" role="tabpanel" hidden>
-      <div class="section-head">
-        <h2>Phones, emails & links</h2>
-        <button type="button" class="btn btn-secondary" id="add-contact">Add contact</button>
+      <div class="block">
+        <div class="section-head">
+          <div class="block-head">
+            <h2>Phones, emails & links</h2>
+            <p class="help">Tags are labels only (Smart, Globe, Personal Email). Values stay clean numbers or emails.</p>
+          </div>
+          <button type="button" class="btn btn-secondary" id="add-contact">Add contact</button>
+        </div>
+        <div id="contacts-list" class="contacts-list"></div>
       </div>
-      <p class="help">Tags stay as labels only (Smart, Globe, Personal Email). Values stay clean numbers/emails.</p>
-      <div id="contacts-list" class="contacts-list"></div>
     </section>
 
     <section class="panel" id="panel-messaging" role="tabpanel" hidden>
-      <h2>Messaging buttons</h2>
-      <p class="help">Off by default. Turn on WhatsApp, Viber, or Telegram when you want them on the public card.</p>
-      <div class="form-grid">
-        <label class="field check-field">
-          <span><input type="checkbox" id="msg-wa-enabled"> Show WhatsApp</span>
-          <input id="msg-wa-value" type="text" placeholder="+639711358319">
-        </label>
-        <label class="field check-field">
-          <span><input type="checkbox" id="msg-viber-enabled"> Show Viber</span>
-          <input id="msg-viber-value" type="text" placeholder="+639711358319">
-        </label>
-        <label class="field check-field">
-          <span><input type="checkbox" id="msg-tg-enabled"> Show Telegram</span>
-          <input id="msg-tg-value" type="text" placeholder="@username or phone">
-        </label>
+      <div class="block">
+        <div class="block-head">
+          <h2>Messaging</h2>
+          <p class="help">Turn channels on for the public card. Enter a phone or @username for each.</p>
+        </div>
+        <div class="channel-list" id="messaging-list">
+          <article class="channel-card" data-channel="whatsapp">
+            <div class="channel-head">
+              <span class="channel-icon" data-icon="whatsapp" aria-hidden="true"></span>
+              <div>
+                <h3>WhatsApp</h3>
+                <p>Opens a chat with your number</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="msg-wa-enabled">
+                <span class="switch-ui"></span>
+                <span class="sr-only">Show WhatsApp</span>
+              </label>
+            </div>
+            <label class="field">
+              <span>Phone number</span>
+              <input id="msg-wa-value" type="text" placeholder="+639711358319" inputmode="tel">
+            </label>
+          </article>
+
+          <article class="channel-card" data-channel="viber">
+            <div class="channel-head">
+              <span class="channel-icon" data-icon="viber" aria-hidden="true"></span>
+              <div>
+                <h3>Viber</h3>
+                <p>Opens Viber chat</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="msg-viber-enabled">
+                <span class="switch-ui"></span>
+                <span class="sr-only">Show Viber</span>
+              </label>
+            </div>
+            <label class="field">
+              <span>Phone number</span>
+              <input id="msg-viber-value" type="text" placeholder="+639711358319" inputmode="tel">
+            </label>
+          </article>
+
+          <article class="channel-card" data-channel="telegram">
+            <div class="channel-head">
+              <span class="channel-icon" data-icon="telegram" aria-hidden="true"></span>
+              <div>
+                <h3>Telegram</h3>
+                <p>Username or phone</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="msg-tg-enabled">
+                <span class="switch-ui"></span>
+                <span class="sr-only">Show Telegram</span>
+              </label>
+            </div>
+            <label class="field">
+              <span>@username or phone</span>
+              <input id="msg-tg-value" type="text" placeholder="@username">
+            </label>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-socials" role="tabpanel" hidden>
+      <div class="block">
+        <div class="block-head">
+          <h2>Social links</h2>
+          <p class="help">Enable networks and paste profile URLs. Icons show on the card when enabled.</p>
+        </div>
+        <div class="channel-list" id="socials-list"></div>
       </div>
     </section>
 
     <section class="panel" id="panel-resume" role="tabpanel" hidden>
-      <h2>Resume builder</h2>
-      <p class="help">Same resume builder used on dcgrouphq — protected by this admin session.</p>
-      <a class="btn btn-primary" href="/resume/">Open resume builder</a>
+      <div class="block">
+        <div class="block-head">
+          <h2>Saved resumes</h2>
+          <p class="help">Set one builder profile as active. Visitors get that resume rendered automatically — no PDF upload needed. An optional PDF override is available if you want a file download instead.</p>
+        </div>
+        <div id="resume-list" class="resume-list"></div>
+        <p class="help tight" id="resume-empty" hidden>No saved resumes yet. Use Resume builder at the top, save a version, then refresh this list.</p>
+        <div class="resume-active-box" id="resume-active-box" hidden>
+          <div>
+            <strong id="resume-active-name">—</strong>
+            <p class="help tight" id="resume-active-meta"></p>
+          </div>
+          <div class="resume-active-actions">
+            <label class="file-btn file-btn-secondary">
+              Optional PDF
+              <input type="file" id="resume-pdf-file" accept="application/pdf,.pdf" hidden>
+            </label>
+            <button type="button" class="btn btn-ghost" id="resume-clear-active">Clear active</button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary" id="resume-refresh">Refresh list</button>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-security" role="tabpanel" hidden>
+      <div class="block">
+        <div class="block-head">
+          <h2>Change password</h2>
+          <p class="help">Updates the password used when you triple-click the QR code to open admin. Saved separately from card content.</p>
+        </div>
+        <form class="password-form" id="password-form" autocomplete="off">
+          <label class="field">
+            <span>Current password</span>
+            <input id="pw-current" type="password" autocomplete="current-password" required>
+          </label>
+          <label class="field">
+            <span>New password</span>
+            <input id="pw-new" type="password" autocomplete="new-password" minlength="6" required>
+          </label>
+          <label class="field">
+            <span>Confirm new password</span>
+            <input id="pw-confirm" type="password" autocomplete="new-password" minlength="6" required>
+          </label>
+          <div class="password-actions">
+            <button type="submit" class="btn btn-primary" id="pw-submit">Update password</button>
+            <p class="help tight">At least 6 characters. You’ll keep using this password until you change it again.</p>
+          </div>
+        </form>
+      </div>
     </section>
 
     <footer class="admin-foot">
@@ -144,6 +493,8 @@
       <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">Preview card</a>
     </footer>
   </div>
+
+  <div class="toast-host" id="toast-host" aria-live="polite" aria-relevant="additions"></div>
 
   <template id="contact-row-tpl">
     <div class="contact-row">
@@ -154,9 +505,32 @@
       </select>
       <input class="c-label" type="text" placeholder="Tag (Smart, Personal Email…)" aria-label="Tag">
       <input class="c-value" type="text" placeholder="Value" aria-label="Value">
-      <label class="c-visible"><input type="checkbox" checked> Show</label>
-      <button type="button" class="btn btn-danger c-delete" aria-label="Delete">Delete</button>
+      <div class="contact-row-actions">
+        <label class="c-visible"><input type="checkbox" checked> Show</label>
+        <button type="button" class="btn btn-danger c-delete" aria-label="Delete">Delete</button>
+      </div>
     </div>
+  </template>
+
+  <template id="social-row-tpl">
+    <article class="channel-card social-card">
+      <div class="channel-head">
+        <span class="channel-icon" data-social-icon aria-hidden="true"></span>
+        <div>
+          <h3 data-social-label></h3>
+          <p>Profile URL</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" data-social-enabled>
+          <span class="switch-ui"></span>
+          <span class="sr-only">Show network</span>
+        </label>
+      </div>
+      <label class="field">
+        <span>URL</span>
+        <input type="url" data-social-url placeholder="https://">
+      </label>
+    </article>
   </template>
 
   <script src="/admin/admin.js" type="module"></script>

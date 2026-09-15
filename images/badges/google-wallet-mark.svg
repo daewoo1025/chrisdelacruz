@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+  <!-- Official Google Wallet product mark -->
+  <path fill="#34A853" d="M14 0H6C2.7 0 0 2.7 0 6v16c0 3.3 2.7 6 6 6h8c3.3 0 6-2.7 6-6V6c0-3.3-2.7-6-6-6z"/>
+  <path fill="#FBBC04" d="M20 8h-6v4h6c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2h-6v4h6c3.3 0 6-2.7 6-6v-4c0-3.3-2.7-6-6-6z"/>
+  <path fill="#4285F4" d="M8 8H0v4h6c.6 0 1 .4 1 1v2H0v4h8c2.2 0 4-1.8 4-4v-3c0-2.2-1.8-4-4-4z"/>
+  <path fill="#EA4335" d="M8 4H2C.9 4 0 4.9 0 6v2h8V6c0-1.1-.9-2-2-2z"/>
+</svg>

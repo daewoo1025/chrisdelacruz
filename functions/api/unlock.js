@@ -1,8 +1,13 @@
 /**
  * POST /api/unlock — sets HttpOnly session cookie for admin + resume.
- * Password: UNLOCK_PASSWORD in .dev.vars / Pages secret.
+ * Password: custom admin password (KV) or UNLOCK_PASSWORD secret.
  */
-import { COOKIE, json } from "../_lib/card.js";
+import {
+  COOKIE,
+  json,
+  readPasswordHash,
+  verifyUnlockPassword,
+} from "../_lib/card.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -15,16 +20,16 @@ export async function onRequestPost(context) {
   }
 
   const password = typeof body?.password === "string" ? body.password : "";
-  const expected = env.UNLOCK_PASSWORD;
+  const customHash = await readPasswordHash(env);
 
-  if (!expected) {
+  if (!env.UNLOCK_PASSWORD && !customHash) {
     return json(
       { ok: false, error: "Unlock is not configured on this deployment." },
       500
     );
   }
 
-  if (password !== expected) {
+  if (!(await verifyUnlockPassword(env, password))) {
     return json({ ok: false, error: "Incorrect password" }, 401);
   }
 
