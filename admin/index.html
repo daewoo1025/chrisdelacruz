@@ -29,6 +29,7 @@
       <button type="button" class="tab is-active" data-tab="appearance" role="tab" aria-selected="true">Appearance</button>
       <button type="button" class="tab" data-tab="details" role="tab" aria-selected="false">Details</button>
       <button type="button" class="tab" data-tab="contacts" role="tab" aria-selected="false">Contacts</button>
+      <button type="button" class="tab" data-tab="messaging" role="tab" aria-selected="false">Messaging</button>
       <button type="button" class="tab" data-tab="resume" role="tab" aria-selected="false">Resume</button>
     </nav>
 
@@ -93,11 +94,14 @@
         <label class="field"><span>Tagline</span><input id="id-tagline" type="text"></label>
         <label class="field"><span>Eyebrow</span><input id="id-eyebrow" type="text"></label>
         <label class="field"><span>Name</span><input id="id-name" type="text"></label>
-        <label class="field"><span>Role</span><input id="id-role" type="text"></label>
-        <label class="field"><span>Place / affiliation</span><input id="id-place" type="text"></label>
-        <label class="field"><span>Organization</span><input id="id-org" type="text"></label>
+        <label class="field"><span>Job title</span><input id="id-role" type="text" placeholder="Junior Data Analyst"></label>
+        <label class="field"><span>Card place line</span><input id="id-place" type="text" placeholder="Dubai, UAE"></label>
+        <label class="field"><span>Work location (vCard)</span><input id="id-work-location" type="text" placeholder="Dubai, UAE"></label>
+        <label class="field"><span>Home location (vCard)</span><input id="id-home-location" type="text" placeholder="Metro Manila, Philippines"></label>
+        <label class="field"><span>Company</span><input id="id-org" type="text" placeholder="Company name"></label>
+        <label class="field"><span>Company website</span><input id="id-company-website" type="url" placeholder="https://"></label>
         <label class="field"><span>LinkedIn URL</span><input id="id-linkedin" type="url"></label>
-        <label class="field full"><span>Note (vCard)</span><textarea id="id-note" rows="2"></textarea></label>
+        <label class="field full"><span>Notes (who you are / what you do)</span><textarea id="id-note" rows="5"></textarea></label>
       </div>
     </section>
 
@@ -106,8 +110,27 @@
         <h2>Phones, emails & links</h2>
         <button type="button" class="btn btn-secondary" id="add-contact">Add contact</button>
       </div>
-      <p class="help">Use custom tags like Smart, Globe, Etisalat, Personal Email, Company Email, Company Phone.</p>
+      <p class="help">Tags stay as labels only (Smart, Globe, Personal Email). Values stay clean numbers/emails.</p>
       <div id="contacts-list" class="contacts-list"></div>
+    </section>
+
+    <section class="panel" id="panel-messaging" role="tabpanel" hidden>
+      <h2>Messaging buttons</h2>
+      <p class="help">Off by default. Turn on WhatsApp, Viber, or Telegram when you want them on the public card.</p>
+      <div class="form-grid">
+        <label class="field check-field">
+          <span><input type="checkbox" id="msg-wa-enabled"> Show WhatsApp</span>
+          <input id="msg-wa-value" type="text" placeholder="+639711358319">
+        </label>
+        <label class="field check-field">
+          <span><input type="checkbox" id="msg-viber-enabled"> Show Viber</span>
+          <input id="msg-viber-value" type="text" placeholder="+639711358319">
+        </label>
+        <label class="field check-field">
+          <span><input type="checkbox" id="msg-tg-enabled"> Show Telegram</span>
+          <input id="msg-tg-value" type="text" placeholder="@username or phone">
+        </label>
+      </div>
     </section>
 
     <section class="panel" id="panel-resume" role="tabpanel" hidden>

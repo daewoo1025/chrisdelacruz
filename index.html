@@ -44,8 +44,13 @@
         <div class="identity">
           <p class="eyebrow" id="eyebrow">Hello, I’m</p>
           <h1 id="display-name">Christian Dela Cruz</h1>
-          <p class="role" id="role">Process Automation and Improvement</p>
-          <p class="place" id="place">Dubai, UAE · DC Group HQ</p>
+          <p class="role" id="role">Junior Data Analyst</p>
+          <p class="place" id="place">Dubai, UAE</p>
+          <p class="company" id="company-line" hidden>
+            <a id="company-link" href="#" target="_blank" rel="noopener noreferrer">
+              <span id="company-name"></span>
+            </a>
+          </p>
         </div>
 
         <ul class="facts" id="facts" aria-label="Contact details">
@@ -74,6 +79,7 @@
             <a class="btn btn-primary" id="save-contact" href="/api/vcf" download="Christian_Dela_Cruz.vcf">
               Save to Contacts
             </a>
+            <div class="btn-row messaging-row" id="messaging-row" hidden></div>
             <div class="btn-row">
               <button type="button" class="btn btn-wallet" id="apple-wallet" data-platform="apple">
                 <span class="wallet-icon" aria-hidden="true">
@@ -100,23 +106,23 @@
             <p class="hint" id="status" role="status" aria-live="polite"></p>
           </div>
 
-          <aside class="qr-block" aria-label="QR code to save contact">
+          <aside class="qr-block" aria-label="QR code to open calling card">
             <img
               id="qr"
               class="qr-image"
               src="images/contact-qr.png"
               width="180"
               height="180"
-              alt="QR code that adds Christian Dela Cruz as a contact"
+              alt="QR code to chrisdelacruz.com"
             >
-            <p class="qr-caption">Scan to save my contact</p>
+            <p class="qr-caption">Scan to open my card</p>
           </aside>
         </div>
       </section>
     </main>
 
     <footer class="foot">
-      <p>&copy; <span id="year"></span> <span id="footer-name">Christian Dela Cruz</span></p>
+      <p>&copy; 2024–2026 <span id="footer-name">Christian Dela Cruz</span></p>
     </footer>
   </div>
 

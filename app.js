@@ -1,7 +1,4 @@
 (() => {
-  const yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-
   const statusEl = document.getElementById("status");
   const saveBtn = document.getElementById("save-contact");
   const appleBtn = document.getElementById("apple-wallet");
@@ -13,7 +10,6 @@
   const errorEl = document.getElementById("unlock-error");
   const submitBtn = document.getElementById("unlock-submit");
 
-  let card = null;
   let photoClicks = 0;
   let photoClickTimer = null;
 
@@ -35,7 +31,11 @@
 
   function displayValue(contact) {
     if (contact.type === "phone") {
-      return contact.value.replace(/^\+63/, "+63 ").replace(/(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3");
+      const raw = contact.value.replace(/[^\d+]/g, "");
+      if (raw.startsWith("+63") && raw.length >= 12) {
+        return `+63 ${raw.slice(3, 6)} ${raw.slice(6, 9)} ${raw.slice(9)}`;
+      }
+      return contact.value;
     }
     if (contact.type === "link") {
       try {
@@ -54,8 +54,51 @@
     return contact.value;
   }
 
+  function digitsOnly(value) {
+    return String(value || "").replace(/\D/g, "");
+  }
+
+  function messagingHref(kind, value) {
+    const v = String(value || "").trim();
+    if (!v) return null;
+    if (kind === "whatsapp") return `https://wa.me/${digitsOnly(v)}`;
+    if (kind === "viber") return `viber://chat?number=${encodeURIComponent(digitsOnly(v))}`;
+    if (kind === "telegram") {
+      const user = v.replace(/^@/, "");
+      if (/^\+?\d+$/.test(user)) return `https://t.me/+${digitsOnly(user)}`;
+      return `https://t.me/${encodeURIComponent(user)}`;
+    }
+    return null;
+  }
+
+  function renderMessaging(messaging = {}) {
+    const row = document.getElementById("messaging-row");
+    if (!row) return;
+    row.innerHTML = "";
+    const items = [
+      { key: "whatsapp", label: "WhatsApp" },
+      { key: "viber", label: "Viber" },
+      { key: "telegram", label: "Telegram" },
+    ];
+    let shown = 0;
+    for (const item of items) {
+      const cfg = messaging[item.key];
+      if (!cfg?.enabled || !cfg.value) continue;
+      const href = messagingHref(item.key, cfg.value);
+      if (!href) continue;
+      const a = document.createElement("a");
+      a.className = "btn btn-msg";
+      a.href = href;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = item.label;
+      row.appendChild(a);
+      shown += 1;
+    }
+    row.hidden = shown === 0;
+  }
+
   function applyCard(data) {
-    card = data;
     document.documentElement.dataset.theme = data.theme || "sky";
 
     const id = data.identity || {};
@@ -69,7 +112,7 @@
     setText("eyebrow", id.eyebrow || "Hello, I’m");
     setText("display-name", id.name || "");
     setText("role", id.role || "");
-    setText("place", id.place || "");
+    setText("place", id.place || id.workLocation || "");
     setText("footer-name", id.name || "Christian Dela Cruz");
 
     document.title = `${id.name || "Calling Card"} · Calling Card`;
@@ -77,6 +120,27 @@
 
     const linkedin = document.getElementById("linkedin-cta");
     if (linkedin && id.linkedin) linkedin.href = id.linkedin;
+
+    const companyLine = document.getElementById("company-line");
+    const companyName = document.getElementById("company-name");
+    const companyLink = document.getElementById("company-link");
+    if (companyLine && companyName && companyLink) {
+      if (id.org) {
+        companyName.textContent = id.org;
+        if (id.companyWebsite) {
+          companyLink.href = id.companyWebsite;
+          companyLink.style.pointerEvents = "";
+          companyLink.style.color = "";
+        } else {
+          companyLink.removeAttribute("href");
+          companyLink.style.pointerEvents = "none";
+          companyLink.style.color = "inherit";
+        }
+        companyLine.hidden = false;
+      } else {
+        companyLine.hidden = true;
+      }
+    }
 
     const frame = document.getElementById("portrait-frame");
     const p = data.photo || {};
@@ -102,14 +166,20 @@
           a.target = "_blank";
           a.rel = "noopener noreferrer";
         }
-        a.innerHTML =
-          `<span class="fact-label"></span><span class="fact-value"></span>`;
-        a.querySelector(".fact-label").textContent = c.label || c.type;
-        a.querySelector(".fact-value").textContent = displayValue(c);
+        const label = document.createElement("span");
+        label.className = "fact-label";
+        label.textContent = c.label || c.type;
+        const value = document.createElement("span");
+        value.className = "fact-value";
+        value.textContent = displayValue(c);
+        a.appendChild(label);
+        a.appendChild(value);
         li.appendChild(a);
         facts.appendChild(li);
       }
     }
+
+    renderMessaging(data.messaging);
 
     if (saveBtn && id.name) {
       saveBtn.setAttribute(
@@ -123,8 +193,7 @@
     try {
       const res = await fetch("/api/card", { credentials: "same-origin" });
       if (!res.ok) return;
-      const data = await res.json();
-      applyCard(data);
+      applyCard(await res.json());
     } catch {
       /* keep static defaults */
     }

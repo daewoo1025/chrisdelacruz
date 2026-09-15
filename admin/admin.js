@@ -58,9 +58,29 @@ function collectIdentity() {
     name: document.getElementById("id-name").value.trim(),
     role: document.getElementById("id-role").value.trim(),
     place: document.getElementById("id-place").value.trim(),
+    workLocation: document.getElementById("id-work-location").value.trim(),
+    homeLocation: document.getElementById("id-home-location").value.trim(),
     org: document.getElementById("id-org").value.trim(),
+    companyWebsite: document.getElementById("id-company-website").value.trim(),
     linkedin: document.getElementById("id-linkedin").value.trim(),
     note: document.getElementById("id-note").value.trim(),
+  };
+}
+
+function collectMessaging() {
+  return {
+    whatsapp: {
+      enabled: document.getElementById("msg-wa-enabled").checked,
+      value: document.getElementById("msg-wa-value").value.trim(),
+    },
+    viber: {
+      enabled: document.getElementById("msg-viber-enabled").checked,
+      value: document.getElementById("msg-viber-value").value.trim(),
+    },
+    telegram: {
+      enabled: document.getElementById("msg-tg-enabled").checked,
+      value: document.getElementById("msg-tg-value").value.trim(),
+    },
   };
 }
 
@@ -92,9 +112,24 @@ function fillIdentity(identity) {
   document.getElementById("id-name").value = identity.name || "";
   document.getElementById("id-role").value = identity.role || "";
   document.getElementById("id-place").value = identity.place || "";
+  document.getElementById("id-work-location").value = identity.workLocation || identity.place || "";
+  document.getElementById("id-home-location").value = identity.homeLocation || "";
   document.getElementById("id-org").value = identity.org || "";
+  document.getElementById("id-company-website").value = identity.companyWebsite || "";
   document.getElementById("id-linkedin").value = identity.linkedin || "";
   document.getElementById("id-note").value = identity.note || "";
+}
+
+function fillMessaging(messaging = {}) {
+  const wa = messaging.whatsapp || {};
+  const vb = messaging.viber || {};
+  const tg = messaging.telegram || {};
+  document.getElementById("msg-wa-enabled").checked = Boolean(wa.enabled);
+  document.getElementById("msg-wa-value").value = wa.value || "";
+  document.getElementById("msg-viber-enabled").checked = Boolean(vb.enabled);
+  document.getElementById("msg-viber-value").value = vb.value || "";
+  document.getElementById("msg-tg-enabled").checked = Boolean(tg.enabled);
+  document.getElementById("msg-tg-value").value = tg.value || "";
 }
 
 function fillPhoto(photo, hasCustomPhoto) {
@@ -161,6 +196,7 @@ function bindTabs() {
     appearance: document.getElementById("panel-appearance"),
     details: document.getElementById("panel-details"),
     contacts: document.getElementById("panel-contacts"),
+    messaging: document.getElementById("panel-messaging"),
     resume: document.getElementById("panel-resume"),
   };
 
@@ -217,6 +253,7 @@ async function load() {
     const data = await api("/api/admin/settings");
     state.settings = data.settings;
     fillIdentity(data.settings.identity);
+    fillMessaging(data.settings.messaging);
     fillPhoto(data.settings.photo, data.hasCustomPhoto);
     renderThemes(data.settings.theme, data.themes || Object.keys(THEME_LABELS));
     renderContacts(data.settings.contacts);
@@ -234,6 +271,7 @@ async function save() {
     ...state.settings,
     theme: state.settings.theme,
     identity: collectIdentity(),
+    messaging: collectMessaging(),
     photo: collectPhoto(),
     contacts: collectContacts(),
   };
@@ -335,11 +373,25 @@ document.getElementById("photo-reset").addEventListener("click", async () => {
   "id-name",
   "id-role",
   "id-place",
+  "id-work-location",
+  "id-home-location",
   "id-org",
+  "id-company-website",
   "id-linkedin",
   "id-note",
+  "msg-wa-value",
+  "msg-viber-value",
+  "msg-tg-value",
 ].forEach((id) => {
   document.getElementById(id).addEventListener("input", markDirty);
+});
+
+[
+  "msg-wa-enabled",
+  "msg-viber-enabled",
+  "msg-tg-enabled",
+].forEach((id) => {
+  document.getElementById(id).addEventListener("change", markDirty);
 });
 
 window.addEventListener("beforeunload", (e) => {

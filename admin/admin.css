@@ -200,7 +200,12 @@ body {
   color: var(--muted);
 }
 
-.field.full { grid-column: 1 / -1; }
+.check-field span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ink);
+}
 
 .field input,
 .field select,

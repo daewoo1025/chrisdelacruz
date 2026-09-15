@@ -4,7 +4,12 @@
  * Set secret:
  *   npx wrangler pages secret put WALLETWALLET_API_KEY --project-name=chrisdelacruz
  */
-import { readSettings, readPhoto, publicCardPayload } from "../_lib/card.js";
+import {
+  readSettings,
+  readPhoto,
+  publicCardPayload,
+  SITE_URL,
+} from "../_lib/card.js";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -53,11 +58,15 @@ export async function onRequest(context) {
   const emails = (card.contacts || []).filter((c) => c.type === "email");
 
   const backFields = [
-    ...phones.map((c) => ({ label: c.label, value: c.value })),
-    ...emails.map((c) => ({ label: c.label, value: c.value })),
-    { label: "Website", value: "https://chrisdelacruz.com" },
+    ...phones.map((c) => ({ label: c.label || "Phone", value: c.value })),
+    ...emails.map((c) => ({ label: c.label || "Email", value: c.value })),
+    { label: "Website", value: SITE_URL },
+    ...(id.org ? [{ label: "Company", value: id.org }] : []),
+    ...(id.companyWebsite
+      ? [{ label: "Company site", value: id.companyWebsite }]
+      : []),
     ...(id.linkedin ? [{ label: "LinkedIn", value: id.linkedin }] : []),
-    { label: "Save contact", value: "https://chrisdelacruz.com/api/vcf" },
+    { label: "Save contact", value: `${SITE_URL}/api/vcf` },
   ];
 
   const body = {
@@ -67,11 +76,13 @@ export async function onRequest(context) {
     colorPreset: "blue",
     sharingProhibited: false,
     barcodeFormat: "QR",
-    barcodeValue: "https://chrisdelacruz.com/api/vcf",
+    // Wallet QR opens the live calling card site
+    barcodeValue: SITE_URL,
     primaryFields: [{ label: "Name", value: id.name || "Contact" }],
     secondaryFields: [
-      { label: "Role", value: id.role || "" },
-      { label: "Based in", value: id.place || "" },
+      { label: "Title", value: id.role || "" },
+      { label: "Company", value: id.org || "" },
+      { label: "Based in", value: id.workLocation || id.place || "" },
     ].filter((f) => f.value),
     headerFields: [{ label: "Card", value: "Contact" }],
     backFields,

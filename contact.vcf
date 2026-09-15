@@ -3,11 +3,15 @@ VERSION:3.0
 N:Dela Cruz;Christian;;;
 FN:Christian Dela Cruz
 ORG:DC Group HQ
-TITLE:Process Automation and Improvement
-TEL;TYPE=CELL:+639711358319
-EMAIL;TYPE=INTERNET:c000business@gmail.com
-ADR;TYPE=WORK:;;Dubai;;;United Arab Emirates
+TITLE:Junior Data Analyst
+item1.TEL;TYPE=CELL:+639711358319
+item1.X-ABLabel:Smart
+item2.EMAIL;TYPE=HOME:c000business@gmail.com
+item2.X-ABLabel:Personal Email
+item3.URL:https://www.linkedin.com/in/chris-dc/
+item3.X-ABLabel:LinkedIn
 URL:https://chrisdelacruz.com
-URL:https://www.linkedin.com/in/chris-dc/
-NOTE:Process automation and improvement professional based in Dubai\, UAE.
+ADR;TYPE=WORK:;;Dubai\, UAE;;;;
+ADR;TYPE=HOME:;;Metro Manila\, Philippines;;;;
+NOTE:Christian Dela Cruz — Junior Data Analyst and process automation professional. Currently based in Dubai\, UAE\, and available for freelance work in the Philippines (Metro Manila). I help teams turn data into clearer decisions\, automate repetitive work\, and improve day-to-day operations.
 END:VCARD

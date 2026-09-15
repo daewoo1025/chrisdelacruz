@@ -241,6 +241,38 @@ body {
   font-size: 0.98rem;
 }
 
+.company {
+  margin-top: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.company a {
+  color: var(--sky-deep);
+  text-decoration: none;
+}
+
+.company a:hover {
+  text-decoration: underline;
+}
+
+.messaging-row:not([hidden]) {
+  display: grid;
+}
+
+.btn-msg {
+  background: var(--white);
+  color: var(--navy);
+  border: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+
+.btn-msg:hover {
+  border-color: var(--sky);
+  color: var(--sky-deep);
+  transform: translateY(-1px);
+}
+
 .facts {
   list-style: none;
   display: grid;

@@ -12,12 +12,12 @@ const DEFAULT_RESUME = {
   name: "Christian Dela Cruz",
   contact: {
     location: "Dubai, UAE",
-    phone: "",
-    email: "",
+    phone: "+639711358319",
+    email: "c000business@gmail.com",
     linkedin: "https://www.linkedin.com/in/chris-dc/",
   },
   summary:
-    "Process automation and improvement professional. Digital calling card at chrisdelacruz.com.",
+    "Junior Data Analyst based in Dubai, UAE, available for freelance work in the Philippines. Digital calling card at chrisdelacruz.com.",
   competencies: [],
   experience: [],
   education: { degree: "", school: "" },
