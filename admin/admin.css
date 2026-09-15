@@ -1,0 +1,327 @@
+:root {
+  --navy: #0c2f4a;
+  --sky: #00aef0;
+  --ink: #14324a;
+  --muted: #4d6478;
+  --line: rgba(12, 47, 74, 0.12);
+  --paper: #f3f8fb;
+  --white: #fff;
+  --danger: #b42318;
+  --font-display: "Bricolage Grotesque", Georgia, serif;
+  --font-body: "Figtree", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  min-height: 100dvh;
+  line-height: 1.45;
+}
+
+.admin-shell {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+
+.admin-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.back {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admin-top h1 {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  letter-spacing: -0.03em;
+  color: var(--navy);
+}
+
+.admin-top-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.banner {
+  background: #e8f7fd;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+}
+
+.banner.is-error {
+  background: #fef3f2;
+  color: var(--danger);
+}
+
+.banner.is-ok {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.5rem;
+}
+
+.tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.tab.is-active {
+  background: var(--navy);
+  color: var(--white);
+}
+
+.panel {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.panel[hidden] { display: none !important; }
+
+.panel h2 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--navy);
+  margin-bottom: 0.75rem;
+}
+
+.panel h2 + .theme-grid,
+.panel h2 + .photo-editor {
+  margin-bottom: 1.25rem;
+}
+
+.help {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.85rem;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.65rem;
+}
+
+.theme-swatch {
+  appearance: none;
+  border: 2px solid transparent;
+  border-radius: 0.85rem;
+  padding: 0.85rem 0.6rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: left;
+  background: linear-gradient(135deg, var(--swatch-a), var(--swatch-b));
+  min-height: 4.5rem;
+}
+
+.theme-swatch.is-active {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 2px rgba(12, 47, 74, 0.15);
+}
+
+.theme-swatch[data-theme="sky"] { --swatch-a: #dff3fb; --swatch-b: #00aef0; }
+.theme-swatch[data-theme="ocean"] { --swatch-a: #d9e8ff; --swatch-b: #1d6fd8; }
+.theme-swatch[data-theme="slate"] { --swatch-a: #e8edf2; --swatch-b: #5b6b7c; }
+.theme-swatch[data-theme="ember"] { --swatch-a: #ffe8d9; --swatch-b: #d97706; }
+.theme-swatch[data-theme="forest"] { --swatch-a: #dff5e8; --swatch-b: #1f8a5b; }
+
+.photo-editor {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+}
+
+.photo-preview-wrap {
+  border-radius: 0.9rem;
+  overflow: hidden;
+  background: #e8f0f5;
+  aspect-ratio: 3/4;
+}
+
+.photo-preview-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-controls {
+  display: grid;
+  gap: 0.65rem;
+  align-content: start;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.field.full { grid-column: 1 / -1; }
+
+.field input,
+.field select,
+.field textarea,
+.contact-row input,
+.contact-row select {
+  font: inherit;
+  font-weight: 500;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  background: #fff;
+  width: 100%;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.contacts-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr 1.4fr auto auto;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.c-visible {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+}
+
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #e8f4fa;
+  color: var(--navy);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+.btn-danger {
+  background: #fef3f2;
+  color: var(--danger);
+  font-size: 0.85rem;
+  min-height: 2.3rem;
+  padding-inline: 0.7rem;
+}
+
+.file-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.admin-foot {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0.75rem;
+  background: rgba(243, 248, 251, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  width: fit-content;
+}
+
+@media (max-width: 720px) {
+  .photo-editor,
+  .form-grid,
+  .contact-row {
+    grid-template-columns: 1fr;
+  }
+
+  .c-visible { justify-self: start; }
+}

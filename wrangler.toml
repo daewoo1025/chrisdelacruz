@@ -1,0 +1,11 @@
+name = "chrisdelacruz"
+compatibility_date = "2025-09-01"
+pages_build_output_dir = "."
+
+# Optional but recommended for persistent admin settings across deploys:
+#   npx wrangler kv namespace create CARD
+# then paste the id below.
+# [[kv_namespaces]]
+# binding = "CARD"
+# id = "YOUR_KV_NAMESPACE_ID"
+# preview_id = "YOUR_KV_PREVIEW_ID"

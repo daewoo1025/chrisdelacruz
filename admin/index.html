@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin · chrisdelacruz.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-top">
+      <div>
+        <a class="back" href="/">← Calling card</a>
+        <h1>Admin</h1>
+      </div>
+      <div class="admin-top-actions">
+        <a class="btn btn-secondary" href="/resume/">Open resume builder</a>
+        <button type="button" class="btn btn-ghost" id="lock-btn">Lock</button>
+      </div>
+    </header>
+
+    <p class="banner" id="banner" hidden></p>
+
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab is-active" data-tab="appearance" role="tab" aria-selected="true">Appearance</button>
+      <button type="button" class="tab" data-tab="details" role="tab" aria-selected="false">Details</button>
+      <button type="button" class="tab" data-tab="contacts" role="tab" aria-selected="false">Contacts</button>
+      <button type="button" class="tab" data-tab="resume" role="tab" aria-selected="false">Resume</button>
+    </nav>
+
+    <section class="panel is-active" id="panel-appearance" role="tabpanel">
+      <h2>Theme</h2>
+      <div class="theme-grid" id="theme-grid"></div>
+
+      <h2>Photo</h2>
+      <div class="photo-editor">
+        <div class="photo-preview-wrap">
+          <img id="photo-preview" src="/images/christian-dela-cruz.png" alt="Current photo">
+        </div>
+        <div class="photo-controls">
+          <label class="file-btn">
+            Replace photo
+            <input type="file" id="photo-file" accept="image/*" hidden>
+          </label>
+          <button type="button" class="btn btn-ghost" id="photo-reset">Use default photo</button>
+
+          <label class="field">
+            <span>Object fit</span>
+            <select id="photo-fit">
+              <option value="cover">Cover</option>
+              <option value="contain">Contain</option>
+              <option value="fill">Fill</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Position</span>
+            <select id="photo-position">
+              <option value="center top">Center top</option>
+              <option value="center center">Center</option>
+              <option value="center bottom">Center bottom</option>
+              <option value="left top">Left top</option>
+              <option value="right top">Right top</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Min height</span>
+            <input type="text" id="photo-min-height" placeholder="68vh">
+          </label>
+
+          <label class="field">
+            <span>Max height</span>
+            <input type="text" id="photo-max-height" placeholder="640px">
+          </label>
+
+          <label class="field">
+            <span>Corner radius</span>
+            <input type="text" id="photo-radius" placeholder="1.6rem">
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-details" role="tabpanel" hidden>
+      <h2>Identity</h2>
+      <div class="form-grid">
+        <label class="field"><span>Brand</span><input id="id-brand" type="text"></label>
+        <label class="field"><span>Tagline</span><input id="id-tagline" type="text"></label>
+        <label class="field"><span>Eyebrow</span><input id="id-eyebrow" type="text"></label>
+        <label class="field"><span>Name</span><input id="id-name" type="text"></label>
+        <label class="field"><span>Role</span><input id="id-role" type="text"></label>
+        <label class="field"><span>Place / affiliation</span><input id="id-place" type="text"></label>
+        <label class="field"><span>Organization</span><input id="id-org" type="text"></label>
+        <label class="field"><span>LinkedIn URL</span><input id="id-linkedin" type="url"></label>
+        <label class="field full"><span>Note (vCard)</span><textarea id="id-note" rows="2"></textarea></label>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-contacts" role="tabpanel" hidden>
+      <div class="section-head">
+        <h2>Phones, emails & links</h2>
+        <button type="button" class="btn btn-secondary" id="add-contact">Add contact</button>
+      </div>
+      <p class="help">Use custom tags like Smart, Globe, Etisalat, Personal Email, Company Email, Company Phone.</p>
+      <div id="contacts-list" class="contacts-list"></div>
+    </section>
+
+    <section class="panel" id="panel-resume" role="tabpanel" hidden>
+      <h2>Resume builder</h2>
+      <p class="help">Same resume builder used on dcgrouphq — protected by this admin session.</p>
+      <a class="btn btn-primary" href="/resume/">Open resume builder</a>
+    </section>
+
+    <footer class="admin-foot">
+      <button type="button" class="btn btn-primary" id="save-btn">Save changes</button>
+      <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">Preview card</a>
+    </footer>
+  </div>
+
+  <template id="contact-row-tpl">
+    <div class="contact-row">
+      <select class="c-type" aria-label="Type">
+        <option value="phone">Phone</option>
+        <option value="email">Email</option>
+        <option value="link">Link</option>
+      </select>
+      <input class="c-label" type="text" placeholder="Tag (Smart, Personal Email…)" aria-label="Tag">
+      <input class="c-value" type="text" placeholder="Value" aria-label="Value">
+      <label class="c-visible"><input type="checkbox" checked> Show</label>
+      <button type="button" class="btn btn-danger c-delete" aria-label="Delete">Delete</button>
+    </div>
+  </template>
+
+  <script src="/admin/admin.js" type="module"></script>
+</body>
+</html>
